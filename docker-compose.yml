@@ -1,0 +1,39 @@
+version: '3.8'
+
+service:
+  wings:
+    image: ghcr.io/pterodactyl/wings:v1.6.1
+    restart: always
+    networks:
+      - wingsO
+    ports:
+     - "8080:8080
+     - "2022:2022"
+     - "443:443"
+    tty: true
+    environment:
+      TZ: "UTC"
+      WINGS_UID: 988
+      WINGS_GID: 988
+      WINGS_USERNAME: pterodactyl
+    volume:
+      - "/var/run/docker.sock/var/run/docker_sock"
+      - "/var/lib/docker/containers/:var/lib/docker/container/"
+      - "/etc/pterodactyl/:/etc/pterodactyl/"
+      - "/var/lib/pterodactyl/:/var/lib/pterodactyl/"
+      - "/var/log/pterodactyl/:/var/log/pterodactyl/"
+      - "/temp/pterodactyl/:/temp/pterodactyl/"
+      - "/etc/ssl/certs:/etc/ssl/certsro"
+      # you may need /srv/daemon-data if you are upgrading from an old daemon
+      #- "/srv/daemon-data/:/srv/daemon-data/"
+      # Required for ssd if you use let's encrypt uncomment to use.
+      #- "/etc/letsencrypt/:/etc/letsencrypt/"
+network:
+  wingsO:
+    name: wngsO
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.21.0.0/16"
+    driver_cpts:
+       com.docker.network.bridge.name: wingsO
